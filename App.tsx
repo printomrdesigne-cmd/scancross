@@ -62,6 +62,7 @@ export const App: React.FC = () => {
     const [sheetId, setSheetId] = useState(() => localStorage.getItem('SHEET_ID') || '');
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isCloudLoading, setIsCloudLoading] = useState(false);
     const [toast, setToast] = useState<{msg: string, type: 'success' | 'error'} | null>(null);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
@@ -69,6 +70,25 @@ export const App: React.FC = () => {
     const handleOpenAuth = (mode: 'login' | 'signup' = 'login') => {
         setAuthModalMode(mode);
         setIsAuthModalOpen(true);
+    };
+
+    const handleFetchCloudRunners = async () => {
+        setIsCloudLoading(true);
+        try {
+            const cloudRunners = await fetchRunnersFromFirestore();
+            if (cloudRunners.length === 0) {
+                showToast('لا يوجد متسابقين مخزنين حالياً في سحابة Firebase', 'error');
+            } else {
+                setRunners(cloudRunners);
+                localStorage.setItem('runnersDb', JSON.stringify(cloudRunners));
+                showToast(`تم استرجاع ${cloudRunners.length} متسابق من السحابة بنجاح`, 'success');
+                setAppState(AppState.CONFIG);
+            }
+        } catch (err: any) {
+            showToast('تعذر جلب البيانات من السحابة: ' + (err.message || 'خطأ في الاتصال'), 'error');
+        } finally {
+            setIsCloudLoading(false);
+        }
     };
 
     // Firebase Auth State Listener
@@ -358,7 +378,8 @@ export const App: React.FC = () => {
 
     const teamResults = calculateTeamResults(finishedRunners);
 
-    const handleSaveRace = async () => {
+    const handleSaveRace = async (showNotification = false) => {
+        if (finishedRunners.length === 0) return;
         const raceId = savedRaceId || new Date().toISOString();
         const raceName = raceConfig.raceName || localStorage.getItem('CURRENT_RACE_NAME') || `سباق ${raceConfig.category} (${raceConfig.gender})`;
         const raceDate = savedRaceDate || new Date().toLocaleDateString('ar-MA');
@@ -368,7 +389,7 @@ export const App: React.FC = () => {
             date: raceDate,
             config: { ...raceConfig, raceName },
             individualResults: finishedRunners,
-            teamResults: teamResults,
+            teamResults: calculateTeamResults(finishedRunners),
             photos: photos
         };
 
@@ -388,11 +409,30 @@ export const App: React.FC = () => {
 
         try {
             await saveRaceToFirestore(raceToSave);
-            showToast('تم حفظ وتحديث نتائج السباق في الأرشيف وسحابة Firebase بنجاح', 'success');
+            if (showNotification) {
+                showToast('تم حفظ وتحديث نتائج السباق في الأرشيف وسحابة Firebase بنجاح', 'success');
+            }
         } catch (error) {
             console.error('Firebase save race error:', error);
-            showToast('تم حفظ السباق محلياً (حدث خطأ في مزامنة السحابة)', 'error');
+            if (showNotification) {
+                showToast('تم حفظ السباق محلياً (حدث خطأ في مزامنة السحابة)', 'error');
+            }
         }
+    };
+
+    // Auto-save whenever finishedRunners or photos change while in RESULTS view
+    useEffect(() => {
+        if (appState === AppState.RESULTS && finishedRunners.length > 0) {
+            handleSaveRace(false);
+        }
+    }, [finishedRunners, photos, appState]);
+
+    const handleFinishScanning = async () => {
+        if (finishedRunners.length > 0) {
+            await handleSaveRace(false);
+            showToast('تم إنهاء السباق وحفظ جميع النتائج تلقائياً في الأرشيف والسحابة', 'success');
+        }
+        setAppState(AppState.RESULTS);
     };
 
     const handleFinalValidation = async () => {
@@ -450,6 +490,8 @@ export const App: React.FC = () => {
                     isInSavedRaces={appState === AppState.SAVED_RACES}
                     onOpenAuthModal={handleOpenAuth}
                     onToast={showToast}
+                    onFetchCloudRunners={handleFetchCloudRunners}
+                    isCloudLoading={isCloudLoading}
                 />
                 
                 <div className="max-w-5xl mx-auto mt-6">
@@ -505,7 +547,7 @@ export const App: React.FC = () => {
                                         onRunnerScanned={handleRunnerScanned}
                                         finishedRunners={finishedRunners}
                                         teamResults={teamResults}
-                                        onFinishScanning={() => setAppState(AppState.RESULTS)}
+                                        onFinishScanning={handleFinishScanning}
                                         photos={photos}
                                         onPhotoAdded={handlePhotoAdded}
                                         onUpdateRunner={handleUpdateRunnerResult}
@@ -525,7 +567,6 @@ export const App: React.FC = () => {
                                         onMoveRunnerRank={handleMoveRunnerRank}
                                         onDeleteRunner={handleDeleteRunnerResult}
                                         onAddRunnerToResults={handleAddRunnerToResults}
-                                        onSaveRace={handleSaveRace}
                                         addToast={showToast}
                                         onFinalValidation={handleFinalValidation}
                                         setIsLoading={setIsLoading}

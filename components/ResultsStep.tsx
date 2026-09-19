@@ -12,7 +12,6 @@ const CameraIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 
 const EditIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" /></svg>;
 const DeleteIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" /></svg>;
 const ValidIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>;
-const SaveIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>;
 const WordIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>;
 const ExcelIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>;
 const NewRaceIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>;
@@ -481,7 +480,6 @@ interface ResultsStepProps {
     onMoveRunnerRank?: (bibNumber: string, delta: -1 | 1) => void;
     onDeleteRunner: (bibNumber: string) => void;
     onAddRunnerToResults?: (runner: RaceResult) => void;
-    onSaveRace: () => void;
     addToast: (message: string, type?: 'success' | 'error') => void;
     onFinalValidation: () => void;
     setIsLoading: (isLoading: boolean) => void;
@@ -499,10 +497,9 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
     onNewRace, 
     onPhotoAdded, 
     onUpdateRunner, 
-    onMoveRunnerRank,
+    onMoveRunnerRank, 
     onDeleteRunner, 
-    onAddRunnerToResults,
-    onSaveRace, 
+    onAddRunnerToResults, 
     addToast, 
     onFinalValidation, 
     setIsLoading, 
@@ -530,7 +527,6 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
         ? (raceConfig.raceName || `نتائج سباق: ${raceConfig.category} (${raceConfig.gender})`)
         : `نتائج ${raceConfig.category} (${raceConfig.gender}) - ${raceConfig.distance}`;
 
-    const [isRaceSaved, setIsRaceSaved] = useState(false);
     const [isRaceValidated, setIsRaceValidated] = useState(false);
     const [participationFilter, setParticipationFilter] = useState<'all' | 'individual' | 'team'>('all');
     const [podiumMode, setPodiumMode] = useState<'all' | 'individualOnly'>('all');
@@ -731,11 +727,6 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
         }
     };
 
-    const handleSaveRaceClick = () => {
-        onSaveRace();
-        setIsRaceSaved(true);
-    };
-
     const handleValidationClick = () => {
         onFinalValidation();
         setIsRaceValidated(true);
@@ -777,6 +768,11 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2.5 flex-wrap justify-end w-full sm:w-auto">
+                        <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 text-xs font-bold shadow-sm">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>محفوظ ومزامن تلقائياً</span>
+                        </div>
+
                         {onBackToSavedRaces && (
                             <button
                                 onClick={onBackToSavedRaces}
@@ -789,15 +785,6 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
                                 <span>العودة إلى السباقات المنجزة</span>
                             </button>
                         )}
-
-                        <button
-                            onClick={handleSaveRaceClick}
-                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-200 dark:shadow-none transition-all active:scale-95"
-                            title="حفظ كافة التعديلات في سحابة Firebase والأرشيف"
-                        >
-                            <SaveIcon />
-                            <span>حفظ التعديلات في السحابة</span>
-                        </button>
                     </div>
                 </div>
             )}
@@ -1330,19 +1317,11 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
                 <div className="mt-4 no-print sticky bottom-4 z-30">
                      <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border border-slate-200 dark:border-slate-700 p-3 rounded-2xl shadow-2xl flex flex-wrap justify-center items-center gap-3 max-w-4xl mx-auto">
                         
-                        {/* Save to Cloud Button */}
-                        <button 
-                            onClick={handleSaveRaceClick} 
-                            title={savedRaceId ? "تحديث وحفظ التعديلات في السحابة والأرشيف" : "حفظ السباق في الأرشيف والسحابة"} 
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all shadow-md active:scale-95 text-xs sm:text-sm ${
-                                isRaceSaved 
-                                ? 'bg-emerald-700 text-white' 
-                                : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-200 dark:shadow-none'
-                            }`}
-                        >
-                            <SaveIcon />
-                            <span>{savedRaceId ? "حفظ التعديلات في السحابة" : "حفظ السباق"}</span>
-                        </button>
+                        {/* Auto-saved badge */}
+                        <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 text-xs sm:text-sm font-bold shadow-sm">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>تم الحفظ تلقائياً ✓</span>
+                        </div>
 
                         {/* Word Export */}
                         <div className="relative" ref={dropdownRef}>
