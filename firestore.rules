@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /runners/{bibNumber} {
+      allow read, write: if true;
+    }
+
+    match /saved_races/{raceId} {
+      allow read, write: if true;
+    }
+  }
+}

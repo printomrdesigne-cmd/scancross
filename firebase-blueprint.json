@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "runners": {
+      "description": "Database of registered race runners",
+      "fields": {
+        "bibNumber": { "type": "string", "description": "Runner bib number", "required": true },
+        "name": { "type": "string", "description": "Full name of runner", "required": true },
+        "institution": { "type": "string", "description": "School or institution", "required": false },
+        "coach": { "type": "string", "description": "Coach name", "required": false },
+        "category": { "type": "string", "description": "Age category", "required": false },
+        "gender": { "type": "string", "description": "Gender", "required": false },
+        "trackId": { "type": "string", "description": "Track ID / License", "required": false },
+        "dob": { "type": "string", "description": "Date of birth", "required": false },
+        "province": { "type": "string", "description": "Province / Delegation", "required": false },
+        "academy": { "type": "string", "description": "Educational Academy", "required": false },
+        "participationType": { "type": "string", "description": "Participation type e.g. individual or team", "required": false },
+        "photo": { "type": "string", "description": "Runner photo URL or base64 data URL", "required": false },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp", "required": false }
+      }
+    },
+    "saved_races": {
+      "description": "Archived race results and configurations",
+      "fields": {
+        "id": { "type": "string", "description": "Unique race ID", "required": true },
+        "date": { "type": "string", "description": "Race date", "required": true },
+        "config": { "type": "object", "description": "Race configuration details", "required": true },
+        "individualResults": { "type": "array", "description": "Individual ranking results", "required": true },
+        "teamResults": { "type": "array", "description": "Team ranking results", "required": true },
+        "photos": { "type": "object", "description": "Photos mapped by bib number", "required": false },
+        "createdAt": { "type": "string", "description": "Creation timestamp", "required": false }
+      }
+    }
+  },
+  "securityRules": {
+    "runners": {
+      "read": "true",
+      "write": "true"
+    },
+    "saved_races": {
+      "read": "true",
+      "write": "true"
+    }
+  }
+}
