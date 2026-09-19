@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { Header } from './components/Header';
 import { StepTracker } from './components/StepTracker';
 import { FileUploadStep } from './components/FileUploadStep';
@@ -8,10 +9,12 @@ import { ResultsStep } from './components/ResultsStep';
 import { SavedRacesView } from './components/SavedRacesView';
 import { OfflineIndicator } from './components/OfflineIndicator';
 import { AuthModal } from './components/AuthModal';
+import { AuthGate } from './components/AuthGate';
 import { AppState } from './constants';
 import { Runner, RaceResult, SavedRace, ScanResult } from './types';
 import { calculateTeamResults } from './utils/resultCalculators';
 import {
+    auth,
     fetchRunnersFromFirestore,
     saveSingleRunnerToFirestore,
     deleteSingleRunnerFromFirestore,
@@ -25,6 +28,12 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIiKAKzc-SGhFXlxzbeX_GSmGM7kxvIkmCrdzR2We9ffJn8XjTrGLzmrl_A9KhRFflDw/exec";
 
 export const App: React.FC = () => {
+    const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(() => {
+        const u = auth.currentUser;
+        return (u && !u.isAnonymous) ? u : null;
+    });
+    const [authChecking, setAuthChecking] = useState(true);
+
     const [appState, setAppState] = useState<AppState>(AppState.UPLOAD);
     const [previousAppState, setPreviousAppState] = useState<AppState>(AppState.CONFIG);
     const [runners, setRunners] = useState<Runner[]>([]);
@@ -61,6 +70,19 @@ export const App: React.FC = () => {
         setAuthModalMode(mode);
         setIsAuthModalOpen(true);
     };
+
+    // Firebase Auth State Listener
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user && !user.isAnonymous) {
+                setCurrentUser(user);
+            } else {
+                setCurrentUser(null);
+            }
+            setAuthChecking(false);
+        });
+        return () => unsubscribe();
+    }, []);
 
     // Initial Load
     useEffect(() => {
@@ -431,88 +453,100 @@ export const App: React.FC = () => {
                 />
                 
                 <div className="max-w-5xl mx-auto mt-6">
-                    {appState !== AppState.UPLOAD && appState !== AppState.SAVED_RACES && (
-                         <StepTracker 
-                            currentStep={appState === AppState.CONFIG ? 2 : appState === AppState.SCANNING ? 3 : 4} 
-                            onStepClick={(s) => {
-                                if (s === 1) setAppState(AppState.UPLOAD);
-                                if (s === 2) setAppState(AppState.CONFIG);
-                                if (s === 3 && finishedRunners.length > 0) setAppState(AppState.SCANNING);
-                                if (s === 4 && finishedRunners.length > 0) setAppState(AppState.RESULTS);
-                            }}
-                        />
+                    {/* Compulsory Authentication Gate */}
+                    {authChecking ? (
+                        <div className="flex flex-col items-center justify-center py-20">
+                            <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                            <p className="mt-4 text-xs font-bold text-slate-500 dark:text-slate-400">جاري التحقق من الحساب...</p>
+                        </div>
+                    ) : !currentUser ? (
+                        <AuthGate onAuthSuccess={(msg) => showToast(msg, 'success')} />
+                    ) : (
+                        <>
+                            {appState !== AppState.UPLOAD && appState !== AppState.SAVED_RACES && (
+                                <StepTracker 
+                                    currentStep={appState === AppState.CONFIG ? 2 : appState === AppState.SCANNING ? 3 : 4} 
+                                    onStepClick={(s) => {
+                                        if (s === 1) setAppState(AppState.UPLOAD);
+                                        if (s === 2) setAppState(AppState.CONFIG);
+                                        if (s === 3 && finishedRunners.length > 0) setAppState(AppState.SCANNING);
+                                        if (s === 4 && finishedRunners.length > 0) setAppState(AppState.RESULTS);
+                                    }}
+                                />
+                            )}
+                            
+                            <div className="mt-6">
+                                {appState === AppState.UPLOAD && (
+                                    <FileUploadStep 
+                                        onRunnersLoaded={handleRunnersLoaded} 
+                                        onSettingsSaved={handleSettingsSaved}
+                                    />
+                                )}
+                                
+                                {appState === AppState.CONFIG && (
+                                    <RaceConfigStep 
+                                        runners={runners} 
+                                        onRaceConfigured={handleRaceConfigured}
+                                        onViewSavedRaces={handleOpenSavedRaces}
+                                        onAddRunner={handleAddRunnerDb}
+                                        onUpdateRunnerInDb={handleUpdateRunnerDb}
+                                        onDeleteRunnerFromDb={handleDeleteRunnerDb}
+                                        onManageSheets={() => sendActionToScript({ action: 'getSheets' })}
+                                        onShowScriptHelp={() => {}} 
+                                        scriptUrl={scriptUrl}
+                                        onScriptUrlChange={setScriptUrl}
+                                        sheetId={sheetId}
+                                        onSheetIdUpdate={handleSheetIdUpdate}
+                                    />
+                                )}
+
+                                {appState === AppState.SCANNING && (
+                                    <ScanningStep 
+                                        onRunnerScanned={handleRunnerScanned}
+                                        finishedRunners={finishedRunners}
+                                        teamResults={teamResults}
+                                        onFinishScanning={() => setAppState(AppState.RESULTS)}
+                                        photos={photos}
+                                        onPhotoAdded={handlePhotoAdded}
+                                        onUpdateRunner={handleUpdateRunnerResult}
+                                        onDeleteRunner={handleDeleteRunnerResult}
+                                    />
+                                )}
+
+                                {appState === AppState.RESULTS && (
+                                    <ResultsStep 
+                                        raceConfig={raceConfig}
+                                        individualResults={finishedRunners}
+                                        teamResults={teamResults}
+                                        photos={photos}
+                                        onNewRace={handleNewRace}
+                                        onPhotoAdded={handlePhotoAdded}
+                                        onUpdateRunner={handleUpdateRunnerResult}
+                                        onMoveRunnerRank={handleMoveRunnerRank}
+                                        onDeleteRunner={handleDeleteRunnerResult}
+                                        onAddRunnerToResults={handleAddRunnerToResults}
+                                        onSaveRace={handleSaveRace}
+                                        addToast={showToast}
+                                        onFinalValidation={handleFinalValidation}
+                                        setIsLoading={setIsLoading}
+                                        savedRaceId={savedRaceId}
+                                        isArchiveView={!!savedRaceId}
+                                        onBackToSavedRaces={handleOpenSavedRaces}
+                                        availableRunners={runners}
+                                    />
+                                )}
+
+                                {appState === AppState.SAVED_RACES && (
+                                    <SavedRacesView 
+                                        onClose={handleCloseSavedRaces} 
+                                        onLoadRace={handleLoadRace} 
+                                        onShowToast={showToast}
+                                        onRacesCountChange={setSavedRacesCount}
+                                    />
+                                )}
+                            </div>
+                        </>
                     )}
-                    
-                    <div className="mt-6">
-                        {appState === AppState.UPLOAD && (
-                            <FileUploadStep 
-                                onRunnersLoaded={handleRunnersLoaded} 
-                                onSettingsSaved={handleSettingsSaved}
-                            />
-                        )}
-                        
-                        {appState === AppState.CONFIG && (
-                            <RaceConfigStep 
-                                runners={runners} 
-                                onRaceConfigured={handleRaceConfigured}
-                                onViewSavedRaces={handleOpenSavedRaces}
-                                onAddRunner={handleAddRunnerDb}
-                                onUpdateRunnerInDb={handleUpdateRunnerDb}
-                                onDeleteRunnerFromDb={handleDeleteRunnerDb}
-                                onManageSheets={() => sendActionToScript({ action: 'getSheets' })}
-                                onShowScriptHelp={() => {}} 
-                                scriptUrl={scriptUrl}
-                                onScriptUrlChange={setScriptUrl}
-                                sheetId={sheetId}
-                                onSheetIdUpdate={handleSheetIdUpdate}
-                            />
-                        )}
-
-                        {appState === AppState.SCANNING && (
-                            <ScanningStep 
-                                onRunnerScanned={handleRunnerScanned}
-                                finishedRunners={finishedRunners}
-                                teamResults={teamResults}
-                                onFinishScanning={() => setAppState(AppState.RESULTS)}
-                                photos={photos}
-                                onPhotoAdded={handlePhotoAdded}
-                                onUpdateRunner={handleUpdateRunnerResult}
-                                onDeleteRunner={handleDeleteRunnerResult}
-                            />
-                        )}
-
-                        {appState === AppState.RESULTS && (
-                            <ResultsStep 
-                                raceConfig={raceConfig}
-                                individualResults={finishedRunners}
-                                teamResults={teamResults}
-                                photos={photos}
-                                onNewRace={handleNewRace}
-                                onPhotoAdded={handlePhotoAdded}
-                                onUpdateRunner={handleUpdateRunnerResult}
-                                onMoveRunnerRank={handleMoveRunnerRank}
-                                onDeleteRunner={handleDeleteRunnerResult}
-                                onAddRunnerToResults={handleAddRunnerToResults}
-                                onSaveRace={handleSaveRace}
-                                addToast={showToast}
-                                onFinalValidation={handleFinalValidation}
-                                setIsLoading={setIsLoading}
-                                savedRaceId={savedRaceId}
-                                isArchiveView={!!savedRaceId}
-                                onBackToSavedRaces={handleOpenSavedRaces}
-                                availableRunners={runners}
-                            />
-                        )}
-
-                        {appState === AppState.SAVED_RACES && (
-                            <SavedRacesView 
-                                onClose={handleCloseSavedRaces} 
-                                onLoadRace={handleLoadRace} 
-                                onShowToast={showToast}
-                                onRacesCountChange={setSavedRacesCount}
-                            />
-                        )}
-                    </div>
                 </div>
             </div>
 

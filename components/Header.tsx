@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { FIREBASE_PROJECT_ID } from '../services/firebase';
 import { PWAInstallButton } from './PWAInstallButton';
 import { UserProfileButton } from './UserProfileButton';
 
@@ -69,15 +68,6 @@ export const Header: React.FC<HeaderProps> = ({
                         )}
                     </button>
                 )}
-
-                <div className="flex items-center gap-2 bg-white/15 backdrop-blur-md px-3 py-2 rounded-xl border border-white/20 text-xs font-semibold shadow-inner">
-                    <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
-                    </span>
-                    <span className="text-white/95 dir-ltr font-mono">{FIREBASE_PROJECT_ID}</span>
-                    <span className="text-amber-300 font-bold">Firebase</span>
-                </div>
             </div>
         </header>
     );

@@ -137,42 +137,42 @@ export const TeamPodium: React.FC<TeamPodiumProps> = ({
             {viewMode === 'podium' ? (
                 <div>
                     {/* Podium Visual Stage */}
-                    <div className="pt-2 pb-4 px-1 sm:px-2">
-                        <div className={`grid grid-cols-1 sm:grid-cols-3 ${compact ? 'gap-3' : 'gap-4 lg:gap-6'} items-end justify-center max-w-4xl mx-auto`}>
+                    <div className="pt-2 pb-2 px-0.5 sm:px-2">
+                        <div className={`grid grid-cols-3 ${compact ? 'gap-1.5 sm:gap-3' : 'gap-1.5 sm:gap-4 lg:gap-6'} items-end justify-center max-w-4xl mx-auto`}>
                             
-                            {/* 2nd Place: Silver (Left on Desktop) */}
+                            {/* 2nd Place: Silver (Left) */}
                             {secondPlace ? (
-                                <div className="flex flex-col items-center order-2 sm:order-1 transition-all duration-300 hover:-translate-y-1">
+                                <div className="flex flex-col items-center w-full transition-all duration-300 hover:-translate-y-1">
                                     {/* Card */}
-                                    <div className={`w-full bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-850 rounded-2xl ${
-                                        compact ? 'p-3' : 'p-4 sm:p-5'
-                                    } border-2 border-slate-300 dark:border-slate-600 shadow-md text-center flex flex-col items-center justify-between mb-2`}>
-                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center shadow-inner mb-1.5 border-2 border-slate-300 dark:border-slate-500">
-                                            <Medal className="w-5 h-5 sm:w-6 sm:h-6 text-slate-500 dark:text-slate-300" />
+                                    <div className={`w-full bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-850 rounded-xl sm:rounded-2xl ${
+                                        compact ? 'p-1.5 sm:p-3' : 'p-1.5 sm:p-4'
+                                    } border-2 border-slate-300 dark:border-slate-600 shadow-md text-center flex flex-col items-center justify-between mb-1.5 sm:mb-2`}>
+                                        <div className="w-8 h-8 min-[400px]:w-10 min-[400px]:h-10 sm:w-12 sm:h-12 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center shadow-inner mb-1 border sm:border-2 border-slate-300 dark:border-slate-500">
+                                            <Medal className="w-4 h-4 min-[400px]:w-5 min-[400px]:h-5 sm:w-6 sm:h-6 text-slate-500 dark:text-slate-300" />
                                         </div>
-                                        <span className="text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-1.5">
-                                            الوصيف 🥈 الفضية
+                                        <span className="text-[8px] min-[400px]:text-[10px] sm:text-xs font-black uppercase px-1 sm:px-2.5 py-0.2 sm:py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-1">
+                                            الوصيف 🥈
                                         </span>
-                                        <h4 className="text-sm sm:text-base font-black text-slate-800 dark:text-white line-clamp-2 min-h-[2.5rem] flex items-center justify-center leading-snug">
+                                        <h4 className="text-[10px] min-[400px]:text-xs sm:text-base font-black text-slate-800 dark:text-white line-clamp-2 min-h-[1.8rem] sm:min-h-[2.5rem] flex items-center justify-center leading-tight">
                                             {secondPlace.institution}
                                         </h4>
                                         
                                         {getTeamDetails(secondPlace.institution).province && (
-                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate max-w-full">
+                                            <p className="text-[8px] min-[400px]:text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate max-w-full hidden min-[360px]:block">
                                                 {getTeamDetails(secondPlace.institution).province}
                                             </p>
                                         )}
 
-                                        <div className="mt-2.5 py-1.5 px-2.5 bg-white dark:bg-slate-700/70 rounded-xl w-full border border-slate-200 dark:border-slate-600/80">
-                                            <div className="text-xl sm:text-2xl font-black text-slate-700 dark:text-slate-200 font-mono">
+                                        <div className="mt-1.5 sm:mt-2.5 py-1 sm:py-1.5 px-1 sm:px-2.5 bg-white dark:bg-slate-700/70 rounded-lg sm:rounded-xl w-full border border-slate-200 dark:border-slate-600/80">
+                                            <div className="text-sm min-[400px]:text-lg sm:text-2xl font-black text-slate-700 dark:text-slate-200 font-mono">
                                                 {secondPlace.totalRank}
                                             </div>
-                                            <div className="text-[10px] text-slate-400 font-bold">
-                                                مجموع النقاط
+                                            <div className="text-[7px] min-[400px]:text-[9px] sm:text-[10px] text-slate-400 font-bold">
+                                                نقطة
                                             </div>
-                                            <div className="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                                            <div className="flex items-center justify-center gap-0.5 mt-0.5 sm:mt-1 flex-wrap">
                                                 {secondPlace.topFourRanks.map((r, idx) => (
-                                                    <span key={idx} className="text-[10px] font-mono bg-slate-100 dark:bg-slate-600 px-1.5 py-0.2 rounded text-slate-600 dark:text-slate-300">
+                                                    <span key={idx} className="text-[7px] min-[400px]:text-[9px] sm:text-[10px] font-mono bg-slate-100 dark:bg-slate-600 px-1 py-0.2 rounded text-slate-600 dark:text-slate-300">
                                                         #{r}
                                                     </span>
                                                 ))}
@@ -182,66 +182,66 @@ export const TeamPodium: React.FC<TeamPodiumProps> = ({
                                         <button
                                             type="button"
                                             onClick={() => handleTeamClick(secondPlace)}
-                                            className="mt-2.5 w-full flex items-center justify-center gap-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 transition-colors"
+                                            className="mt-1.5 sm:mt-2.5 w-full flex items-center justify-center gap-1 text-[8px] min-[400px]:text-[10px] sm:text-xs font-bold py-1 sm:py-1.5 px-1 sm:px-2 rounded-lg sm:rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 transition-colors"
                                         >
-                                            <Eye className="w-3.5 h-3.5" />
-                                            <span>تفاصيل الفريق</span>
+                                            <Eye className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                                            <span className="hidden min-[450px]:inline">تفاصيل</span>
                                         </button>
                                     </div>
 
                                     {/* Pedestal Block (2) */}
-                                    <div className={`w-full hidden sm:flex flex-col items-center justify-center ${
-                                        compact ? 'h-20' : 'h-28 lg:h-32'
-                                    } bg-gradient-to-b from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 rounded-t-2xl shadow-inner border-t-4 border-slate-200 dark:border-slate-500`}>
-                                        <span className={`${compact ? 'text-3xl' : 'text-4xl lg:text-5xl'} font-black text-white/95 drop-shadow`}>
+                                    <div className={`w-full flex flex-col items-center justify-center ${
+                                        compact ? 'h-10 min-[400px]:h-14 sm:h-20' : 'h-12 min-[400px]:h-16 sm:h-28 lg:h-32'
+                                    } bg-gradient-to-b from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 rounded-t-xl sm:rounded-t-2xl shadow-inner border-t-2 sm:border-t-4 border-slate-200 dark:border-slate-500`}>
+                                        <span className="text-xl min-[400px]:text-2xl sm:text-4xl lg:text-5xl font-black text-white/95 drop-shadow">
                                             2
                                         </span>
-                                        <span className="text-[10px] font-bold text-slate-100 uppercase tracking-wider mt-0.5">
-                                            SILVER
+                                        <span className="text-[7px] sm:text-[10px] font-bold text-slate-100 uppercase tracking-wider hidden min-[400px]:block">
+                                            فضية
                                         </span>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="hidden sm:block order-2 sm:order-1 opacity-30 text-center p-4">
-                                    <div className="h-28 border-2 border-dashed border-slate-300 rounded-2xl flex items-center justify-center text-xs text-slate-400">
-                                        الرتبة 2 غير متوفرة
+                                <div className="opacity-30 text-center p-2 w-full">
+                                    <div className="h-20 sm:h-28 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center text-[10px] sm:text-xs text-slate-400">
+                                        الرتبة 2
                                     </div>
                                 </div>
                             )}
 
-                            {/* 1st Place: Gold (Center on Desktop - Elevated) */}
+                            {/* 1st Place: Gold (Center - Elevated) */}
                             {firstPlace && (
-                                <div className="flex flex-col items-center order-1 sm:order-2 transition-all duration-300 hover:-translate-y-1 z-10">
+                                <div className="flex flex-col items-center w-full transition-all duration-300 hover:-translate-y-1 z-10">
                                     {/* Champion Crown / Trophy Icon */}
-                                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 flex items-center justify-center shadow-lg shadow-amber-300/50 dark:shadow-none -mb-5 z-20 border-2 border-white dark:border-slate-800">
-                                        <Trophy className="w-6 h-6 sm:w-7 sm:h-7" />
+                                    <div className="w-8 h-8 min-[400px]:w-10 min-[400px]:h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 flex items-center justify-center shadow-lg shadow-amber-300/50 dark:shadow-none -mb-4 min-[400px]:-mb-5 z-20 border sm:border-2 border-white dark:border-slate-800">
+                                        <Trophy className="w-4 h-4 min-[400px]:w-5 min-[400px]:h-5 sm:w-7 sm:h-7" />
                                     </div>
 
                                     {/* Card */}
-                                    <div className={`w-full bg-gradient-to-b from-amber-50/90 via-yellow-50/50 to-amber-100/40 dark:from-amber-950/40 dark:via-slate-800 dark:to-slate-800 rounded-2xl pt-7 pb-4 px-3 sm:px-5 border-2 border-amber-400 dark:border-amber-500 shadow-xl shadow-amber-200/40 dark:shadow-none text-center flex flex-col items-center justify-between mb-2`}>
-                                        <span className="text-xs font-black uppercase px-3 py-0.5 rounded-full bg-amber-400 text-amber-950 mb-1.5 shadow-sm">
-                                            بطل السباق 🥇 الذهب
+                                    <div className={`w-full bg-gradient-to-b from-amber-50/90 via-yellow-50/50 to-amber-100/40 dark:from-amber-950/40 dark:via-slate-800 dark:to-slate-800 rounded-xl sm:rounded-2xl pt-5 min-[400px]:pt-6 sm:pt-7 pb-2 px-1.5 sm:pb-4 sm:px-4 border-2 border-amber-400 dark:border-amber-500 shadow-xl shadow-amber-200/40 dark:shadow-none text-center flex flex-col items-center justify-between mb-1.5 sm:mb-2`}>
+                                        <span className="text-[8px] min-[400px]:text-[10px] sm:text-xs font-black uppercase px-1.5 sm:px-3 py-0.2 sm:py-0.5 rounded-full bg-amber-400 text-amber-950 mb-1 shadow-sm">
+                                            البطل 🥇
                                         </span>
-                                        <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white line-clamp-2 min-h-[2.5rem] flex items-center justify-center leading-snug">
+                                        <h4 className="text-[11px] min-[400px]:text-xs sm:text-lg font-black text-slate-900 dark:text-white line-clamp-2 min-h-[1.8rem] sm:min-h-[2.5rem] flex items-center justify-center leading-tight">
                                             {firstPlace.institution}
                                         </h4>
 
                                         {getTeamDetails(firstPlace.institution).province && (
-                                            <p className="text-[11px] text-amber-700 dark:text-amber-300 font-bold mt-0.5 truncate max-w-full">
+                                            <p className="text-[8px] min-[400px]:text-[10px] sm:text-[11px] text-amber-700 dark:text-amber-300 font-bold mt-0.5 truncate max-w-full hidden min-[360px]:block">
                                                 {getTeamDetails(firstPlace.institution).province}
                                             </p>
                                         )}
 
-                                        <div className="mt-2.5 py-1.5 px-3 bg-white/95 dark:bg-slate-700/90 rounded-xl w-full border border-amber-300 dark:border-amber-500/40 shadow-sm">
-                                            <div className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">
+                                        <div className="mt-1.5 sm:mt-2.5 py-1 sm:py-1.5 px-1 sm:px-3 bg-white/95 dark:bg-slate-700/90 rounded-lg sm:rounded-xl w-full border border-amber-300 dark:border-amber-500/40 shadow-sm">
+                                            <div className="text-base min-[400px]:text-xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">
                                                 {firstPlace.totalRank}
                                             </div>
-                                            <div className="text-[10px] text-slate-500 dark:text-slate-300 font-bold">
-                                                مجموع النقاط (الأفضل)
+                                            <div className="text-[7px] min-[400px]:text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-300 font-bold">
+                                                نقطة (الأفضل)
                                             </div>
-                                            <div className="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                                            <div className="flex items-center justify-center gap-0.5 mt-0.5 sm:mt-1 flex-wrap">
                                                 {firstPlace.topFourRanks.map((r, idx) => (
-                                                    <span key={idx} className="text-[10px] font-mono font-bold bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.2 rounded text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-700">
+                                                    <span key={idx} className="text-[7px] min-[400px]:text-[9px] sm:text-[10px] font-mono font-bold bg-amber-100 dark:bg-amber-900/60 px-1 py-0.2 rounded text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-700">
                                                         #{r}
                                                     </span>
                                                 ))}
@@ -251,60 +251,60 @@ export const TeamPodium: React.FC<TeamPodiumProps> = ({
                                         <button
                                             type="button"
                                             onClick={() => handleTeamClick(firstPlace)}
-                                            className="mt-2.5 w-full flex items-center justify-center gap-1 text-xs font-bold py-2 px-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black shadow-md shadow-amber-200 dark:shadow-none transition-all active:scale-95"
+                                            className="mt-1.5 sm:mt-2.5 w-full flex items-center justify-center gap-1 text-[8px] min-[400px]:text-[10px] sm:text-xs font-bold py-1 sm:py-2 px-1 sm:px-2.5 rounded-lg sm:rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black shadow-md shadow-amber-200 dark:shadow-none transition-all active:scale-95"
                                         >
-                                            <Eye className="w-3.5 h-3.5" />
-                                            <span>عرض أبطال الفريق</span>
+                                            <Eye className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                                            <span className="hidden min-[450px]:inline">عرض الفريق</span>
                                         </button>
                                     </div>
 
                                     {/* Pedestal Block (1) */}
-                                    <div className={`w-full hidden sm:flex flex-col items-center justify-center ${
-                                        compact ? 'h-28' : 'h-36 lg:h-44'
-                                    } bg-gradient-to-b from-amber-400 via-amber-500 to-yellow-600 dark:from-amber-600 dark:to-yellow-700 rounded-t-2xl shadow-xl border-t-4 border-yellow-200 dark:border-amber-400`}>
-                                        <span className={`${compact ? 'text-4xl' : 'text-5xl lg:text-6xl'} font-black text-white drop-shadow-md`}>
+                                    <div className={`w-full flex flex-col items-center justify-center ${
+                                        compact ? 'h-14 min-[400px]:h-20 sm:h-28' : 'h-16 min-[400px]:h-24 sm:h-36 lg:h-44'
+                                    } bg-gradient-to-b from-amber-400 via-amber-500 to-yellow-600 dark:from-amber-600 dark:to-yellow-700 rounded-t-xl sm:rounded-t-2xl shadow-xl border-t-2 sm:border-t-4 border-yellow-200 dark:border-amber-400`}>
+                                        <span className="text-2xl min-[400px]:text-3xl sm:text-5xl lg:text-6xl font-black text-white drop-shadow-md">
                                             1
                                         </span>
-                                        <span className="text-[10px] sm:text-xs font-black text-yellow-100 uppercase tracking-widest mt-0.5">
-                                            CHAMPION
+                                        <span className="text-[7px] sm:text-xs font-black text-yellow-100 uppercase tracking-widest hidden min-[400px]:block">
+                                            ذهبية
                                         </span>
                                     </div>
                                 </div>
                             )}
 
-                            {/* 3rd Place: Bronze (Right on Desktop) */}
+                            {/* 3rd Place: Bronze (Right) */}
                             {thirdPlace ? (
-                                <div className="flex flex-col items-center order-3 sm:order-3 transition-all duration-300 hover:-translate-y-1">
+                                <div className="flex flex-col items-center w-full transition-all duration-300 hover:-translate-y-1">
                                     {/* Card */}
-                                    <div className={`w-full bg-gradient-to-b from-amber-50/50 to-orange-50/70 dark:from-slate-800 dark:to-slate-850 rounded-2xl ${
-                                        compact ? 'p-3' : 'p-4 sm:p-5'
-                                    } border-2 border-amber-600/50 dark:border-amber-700/60 shadow-md text-center flex flex-col items-center justify-between mb-2`}>
-                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 flex items-center justify-center shadow-inner mb-1.5 border-2 border-amber-400/60 dark:border-amber-600">
-                                            <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-700 dark:text-amber-400" />
+                                    <div className={`w-full bg-gradient-to-b from-amber-50/50 to-orange-50/70 dark:from-slate-800 dark:to-slate-850 rounded-xl sm:rounded-2xl ${
+                                        compact ? 'p-1.5 sm:p-3' : 'p-1.5 sm:p-4'
+                                    } border-2 border-amber-600/50 dark:border-amber-700/60 shadow-md text-center flex flex-col items-center justify-between mb-1.5 sm:mb-2`}>
+                                        <div className="w-8 h-8 min-[400px]:w-10 min-[400px]:h-10 sm:w-12 sm:h-12 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 flex items-center justify-center shadow-inner mb-1 border sm:border-2 border-amber-400/60 dark:border-amber-600">
+                                            <Award className="w-4 h-4 min-[400px]:w-5 min-[400px]:h-5 sm:w-6 sm:h-6 text-amber-700 dark:text-amber-400" />
                                         </div>
-                                        <span className="text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 mb-1.5">
-                                            المرتبة 3 🥉 البرونزية
+                                        <span className="text-[8px] min-[400px]:text-[10px] sm:text-xs font-black uppercase px-1 sm:px-2.5 py-0.2 sm:py-0.5 rounded-full bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 mb-1">
+                                            المرتبة 3 🥉
                                         </span>
-                                        <h4 className="text-sm sm:text-base font-black text-slate-800 dark:text-white line-clamp-2 min-h-[2.5rem] flex items-center justify-center leading-snug">
+                                        <h4 className="text-[10px] min-[400px]:text-xs sm:text-base font-black text-slate-800 dark:text-white line-clamp-2 min-h-[1.8rem] sm:min-h-[2.5rem] flex items-center justify-center leading-tight">
                                             {thirdPlace.institution}
                                         </h4>
 
                                         {getTeamDetails(thirdPlace.institution).province && (
-                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate max-w-full">
+                                            <p className="text-[8px] min-[400px]:text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate max-w-full hidden min-[360px]:block">
                                                 {getTeamDetails(thirdPlace.institution).province}
                                             </p>
                                         )}
 
-                                        <div className="mt-2.5 py-1.5 px-2.5 bg-white dark:bg-slate-700/70 rounded-xl w-full border border-slate-200 dark:border-slate-600/80">
-                                            <div className="text-xl sm:text-2xl font-black text-amber-800 dark:text-amber-300 font-mono">
+                                        <div className="mt-1.5 sm:mt-2.5 py-1 sm:py-1.5 px-1 sm:px-2.5 bg-white dark:bg-slate-700/70 rounded-lg sm:rounded-xl w-full border border-slate-200 dark:border-slate-600/80">
+                                            <div className="text-sm min-[400px]:text-lg sm:text-2xl font-black text-amber-800 dark:text-amber-300 font-mono">
                                                 {thirdPlace.totalRank}
                                             </div>
-                                            <div className="text-[10px] text-slate-400 font-bold">
-                                                مجموع النقاط
+                                            <div className="text-[7px] min-[400px]:text-[9px] sm:text-[10px] text-slate-400 font-bold">
+                                                نقطة
                                             </div>
-                                            <div className="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                                            <div className="flex items-center justify-center gap-0.5 mt-0.5 sm:mt-1 flex-wrap">
                                                 {thirdPlace.topFourRanks.map((r, idx) => (
-                                                    <span key={idx} className="text-[10px] font-mono bg-slate-100 dark:bg-slate-600 px-1.5 py-0.2 rounded text-slate-600 dark:text-slate-300">
+                                                    <span key={idx} className="text-[7px] min-[400px]:text-[9px] sm:text-[10px] font-mono bg-slate-100 dark:bg-slate-600 px-1 py-0.2 rounded text-slate-600 dark:text-slate-300">
                                                         #{r}
                                                     </span>
                                                 ))}
@@ -314,29 +314,29 @@ export const TeamPodium: React.FC<TeamPodiumProps> = ({
                                         <button
                                             type="button"
                                             onClick={() => handleTeamClick(thirdPlace)}
-                                            className="mt-2.5 w-full flex items-center justify-center gap-1 text-xs font-bold py-1.5 px-2 rounded-xl bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/40 dark:hover:bg-amber-900/70 text-amber-900 dark:text-amber-200 transition-colors"
+                                            className="mt-1.5 sm:mt-2.5 w-full flex items-center justify-center gap-1 text-[8px] min-[400px]:text-[10px] sm:text-xs font-bold py-1 sm:py-1.5 px-1 sm:px-2 rounded-lg sm:rounded-xl bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/40 dark:hover:bg-amber-900/70 text-amber-900 dark:text-amber-200 transition-colors"
                                         >
-                                            <Eye className="w-3.5 h-3.5" />
-                                            <span>تفاصيل الفريق</span>
+                                            <Eye className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                                            <span className="hidden min-[450px]:inline">تفاصيل</span>
                                         </button>
                                     </div>
 
                                     {/* Pedestal Block (3) */}
-                                    <div className={`w-full hidden sm:flex flex-col items-center justify-center ${
-                                        compact ? 'h-14' : 'h-20 lg:h-24'
-                                    } bg-gradient-to-b from-amber-600 to-amber-800 dark:from-amber-700 dark:to-amber-900 rounded-t-2xl shadow-inner border-t-4 border-amber-400/80 dark:border-amber-600`}>
-                                        <span className={`${compact ? 'text-3xl' : 'text-4xl lg:text-5xl'} font-black text-white/90 drop-shadow`}>
+                                    <div className={`w-full flex flex-col items-center justify-center ${
+                                        compact ? 'h-8 min-[400px]:h-10 sm:h-14' : 'h-10 min-[400px]:h-14 sm:h-20 lg:h-24'
+                                    } bg-gradient-to-b from-amber-600 to-amber-800 dark:from-amber-700 dark:to-amber-900 rounded-t-xl sm:rounded-t-2xl shadow-inner border-t-2 sm:border-t-4 border-amber-400/80 dark:border-amber-600`}>
+                                        <span className="text-xl min-[400px]:text-2xl sm:text-4xl lg:text-5xl font-black text-white/90 drop-shadow">
                                             3
                                         </span>
-                                        <span className="text-[10px] font-bold text-amber-200 uppercase tracking-wider mt-0.5">
-                                            BRONZE
+                                        <span className="text-[7px] sm:text-[10px] font-bold text-amber-200 uppercase tracking-wider hidden min-[400px]:block">
+                                            برونزية
                                         </span>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="hidden sm:block order-3 sm:order-3 opacity-30 text-center p-4">
-                                    <div className="h-20 border-2 border-dashed border-slate-300 rounded-2xl flex items-center justify-center text-xs text-slate-400">
-                                        الرتبة 3 غير متوفرة
+                                <div className="opacity-30 text-center p-2 w-full">
+                                    <div className="h-20 sm:h-28 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center text-[10px] sm:text-xs text-slate-400">
+                                        الرتبة 3
                                     </div>
                                 </div>
                             )}
